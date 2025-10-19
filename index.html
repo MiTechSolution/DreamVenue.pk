@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrandVenue Hall | Luxury Event Space</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Custom scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom font styles */
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        
+        /* Animation for fade-in elements */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Custom gold gradient */
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        /* Custom gold border */
+        .gold-border {
+            border: 1px solid #D4AF37;
+        }
+        
+        /* Custom gold button */
+        .gold-button {
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%);
+            color: #000;
+            transition: all 0.3s ease;
+        }
+        
+        .gold-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        /* Testimonial slider styles */
+        .testimonial-slider {
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .testimonial-track {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .testimonial-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body class="bg-black text-white font-sans">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/90 backdrop-blur-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-cinzel font-bold gold-gradient">GrandVenue Hall</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-yellow-400 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-yellow-400 transition-colors">About</a>
+                <a href="gallery.html" class="hover:text-yellow-400 transition-colors">Gallery</a>
+                <a href="#testimonials" class="hover:text-yellow-400 transition-colors">Testimonials</a>
+                <a href="Register.html" class="hover:text-yellow-400 transition-colors">ٌRegister</a>
+                <a href="Adminlogin.html" class="hover:text-yellow-400 transition-colors">Admin</a>
+                <a href="contact.html" class="hover:text-yellow-400 transition-colors">Contact</a>
+            </div>
+            <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium">Book Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
+        <!-- Background with subtle pattern -->
+        <div class="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black z-0"></div>
+        <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMzAgMTVjLTguMjggMC0xNSA2LjcyLTE1IDE1czYuNzIgMTUgMTUgMTUgMTUtNi43MiAxNS0xNS02LjcyLTE1LTE1LTE1em0wIDI2Yy02LjA3IDAtMTEtNC45My0xMS0xMXM0LjkzLTExIDExLTExIDExIDQuOTMgMTEgMTEtNC45MyAxMS0xMSAxMXoiIGZpbGw9IiNEMUFFMzciLz48L3N2Zz4=')] z-0"></div>
+        
+        <div class="container mx-auto px-4 text-center z-10">
+            <h1 class="text-5xl md:text-7xl font-cinzel font-bold mb-6 fade-in">
+                <span class="gold-gradient">GrandVenue</span> Hall
+            </h1>
+            <p class="text-xl md:text-2xl mb-10 max-w-2xl mx-auto text-gray-300 fade-in" style="transition-delay: 0.2s;">
+                Where elegance meets excellence. The premier destination for unforgettable events.
+            </p>
+            <a href="booking.html" class="gold-button px-8 py-4 rounded-full text-lg font-medium inline-block fade-in" style="transition-delay: 0.4s;">
+                Book Your Event <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+        </div>
+        
+        <!-- Scroll indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+            <a href="#about" class="text-yellow-400 animate-bounce">
+                <i class="fas fa-chevron-down text-2xl"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gradient-to-b from-black to-gray-900">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-16 fade-in">
+                <h2 class="text-4xl font-cinzel font-bold mb-6">
+                    <span class="gold-gradient">About GrandVenue Hall</span>
+                </h2>
+                <p class="text-lg text-gray-300 leading-relaxed">
+                    GrandVenue Hall stands as the epitome of luxury and sophistication in event hosting. 
+                    With our exquisite black and gold interiors, state-of-the-art facilities, and impeccable service, 
+                    we create the perfect backdrop for your most important celebrations. From grand weddings to corporate galas, 
+                    our dedicated team ensures every detail is executed to perfection.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="text-center p-6 rounded-lg bg-gray-900/50 gold-border fade-in">
+                    <div class="text-yellow-400 text-4xl mb-4">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <h3 class="text-xl font-cinzel font-semibold mb-3">Luxury Design</h3>
+                    <p class="text-gray-300">Exquisite interiors with custom gold accents and premium finishes.</p>
+                </div>
+                
+                <div class="text-center p-6 rounded-lg bg-gray-900/50 gold-border fade-in" style="transition-delay: 0.2s;">
+                    <div class="text-yellow-400 text-4xl mb-4">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="text-xl font-cinzel font-semibold mb-3">Capacity</h3>
+                    <p class="text-gray-300">Accommodating events from intimate gatherings to grand celebrations of up to 500 guests.</p>
+                </div>
+                
+                <div class="text-center p-6 rounded-lg bg-gray-900/50 gold-border fade-in" style="transition-delay: 0.4s;">
+                    <div class="text-yellow-400 text-4xl mb-4">
+                        <i class="fas fa-concierge-bell"></i>
+                    </div>
+                    <h3 class="text-xl font-cinzel font-semibold mb-3">Premium Services</h3>
+                    <p class="text-gray-300">Dedicated event planning, catering, and concierge services for a seamless experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 bg-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-cinzel font-bold text-center mb-16 fade-in">
+                <span class="gold-gradient">Gallery</span>
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <!-- Gallery items with placeholder images -->
+                <div class="rounded-lg overflow-hidden gold-border fade-in">
+                    <div class="h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-yellow-400"></i>
+                    </div>
+                    <div class="p-4 bg-gray-900">
+                        <p class="text-center text-gray-300">Grand Ballroom</p>
+                    </div>
+                </div>
+                
+                <div class="rounded-lg overflow-hidden gold-border fade-in" style="transition-delay: 0.1s;">
+                    <div class="h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-yellow-400"></i>
+                    </div>
+                    <div class="p-4 bg-gray-900">
+                        <p class="text-center text-gray-300">Reception Area</p>
+                    </div>
+                </div>
+                
+                <div class="rounded-lg overflow-hidden gold-border fade-in" style="transition-delay: 0.2s;">
+                    <div class="h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-yellow-400"></i>
+                    </div>
+                    <div class="p-4 bg-gray-900">
+                        <p class="text-center text-gray-300">Dining Setup</p>
+                    </div>
+                </div>
+                
+                <div class="rounded-lg overflow-hidden gold-border fade-in" style="transition-delay: 0.3s;">
+                    <div class="h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-yellow-400"></i>
+                    </div>
+                    <div class="p-4 bg-gray-900">
+                        <p class="text-center text-gray-300">Stage & Lighting</p>
+                    </div>
+                </div>
+                
+                <div class="rounded-lg overflow-hidden gold-border fade-in" style="transition-delay: 0.4s;">
+                    <div class="h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-yellow-400"></i>
+                    </div>
+                    <div class="p-4 bg-gray-900">
+                        <p class="text-center text-gray-300">Outdoor Ceremony Space</p>
+                    </div>
+                </div>
+                
+                <div class="rounded-lg overflow-hidden gold-border fade-in" style="transition-delay: 0.5s;">
+                    <div class="h-64 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-yellow-400"></i>
+                    </div>
+                    <div class="p-4 bg-gray-900">
+                        <p class="text-center text-gray-300">VIP Lounge</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 bg-gradient-to-b from-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-cinzel font-bold text-center mb-16 fade-in">
+                <span class="gold-gradient">Testimonials</span>
+            </h2>
+            
+            <div class="testimonial-slider max-w-4xl mx-auto">
+                <div class="testimonial-track" id="testimonialTrack">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial-slide p-8 text-center">
+                        <div class="text-yellow-400 text-5xl mb-6">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="text-xl italic mb-8 text-gray-300">
+                            "Our wedding at GrandVenue Hall was absolutely magical. The attention to detail and 
+                            impeccable service made our special day truly unforgettable. The gold accents against 
+                            the black backdrop created the perfect luxurious atmosphere we dreamed of."
+                        </p>
+                        <div class="flex items-center justify-center">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center mr-4">
+                                <i class="fas fa-user text-yellow-400"></i>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-cinzel font-semibold text-lg">Sarah & Michael</h4>
+                                <p class="text-gray-400">Wedding Celebration</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial-slide p-8 text-center">
+                        <div class="text-yellow-400 text-5xl mb-6">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="text-xl italic mb-8 text-gray-300">
+                            "We hosted our annual corporate gala at GrandVenue Hall and received countless compliments. 
+                            The venue's sophisticated ambiance and the professional staff made our event a tremendous success. 
+                            We'll definitely be returning next year."
+                        </p>
+                        <div class="flex items-center justify-center">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center mr-4">
+                                <i class="fas fa-user text-yellow-400"></i>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-cinzel font-semibold text-lg">James Richardson</h4>
+                                <p class="text-gray-400">Corporate Event</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial-slide p-8 text-center">
+                        <div class="text-yellow-400 text-5xl mb-6">
+                            <i class="fas fa-quote-left"></i>
+                        </div>
+                        <p class="text-xl italic mb-8 text-gray-300">
+                            "From the initial planning to the execution of our anniversary party, the team at GrandVenue Hall 
+                            was exceptional. The venue's luxurious design provided the perfect backdrop for our celebration, 
+                            and our guests are still talking about it weeks later."
+                        </p>
+                        <div class="flex items-center justify-center">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 flex items-center justify-center mr-4">
+                                <i class="fas fa-user text-yellow-400"></i>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="font-cinzel font-semibold text-lg">The Johnson Family</h4>
+                                <p class="text-gray-400">50th Anniversary</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slider controls -->
+                <div class="flex justify-center mt-8 space-x-4">
+                    <button id="prevTestimonial" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="nextTestimonial" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="py-12 bg-black border-t gold-border">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Address -->
+                <div class="text-center md:text-left">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Address</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>
+                        123 Luxury Avenue
+                    </p>
+                    <p class="text-gray-300 mb-2">Prestige District</p>
+                    <p class="text-gray-300">Metropolis, MP 12345</p>
+                </div>
+                
+                <!-- Contact -->
+                <div class="text-center">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Contact</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-phone text-yellow-400 mr-2"></i>
+                        (555) 123-4567
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-envelope text-yellow-400 mr-2"></i>
+                        info@grandvenuehall.com
+                    </p>
+                    <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium inline-block mt-4">
+                        Book a Tour
+                    </a>
+                </div>
+                
+                <!-- Social Links -->
+                <div class="text-center md:text-right">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Follow Us</h3>
+                    <div class="flex justify-center md:justify-end space-x-4">
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 mt-6 text-sm">
+                        &copy; 2023 GrandVenue Hall. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Testimonial slider functionality
+            const track = document.getElementById('testimonialTrack');
+            const slides = document.querySelectorAll('.testimonial-slide');
+            const prevButton = document.getElementById('prevTestimonial');
+            const nextButton = document.getElementById('nextTestimonial');
+            let currentIndex = 0;
+            
+            function updateSlider() {
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+            
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex > 0) ? currentIndex - 1 : slides.length - 1;
+                updateSlider();
+            });
+            
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex < slides.length - 1) ? currentIndex + 1 : 0;
+                updateSlider();
+            });
+            
+            // Auto-advance testimonials
+            setInterval(() => {
+                currentIndex = (currentIndex < slides.length - 1) ? currentIndex + 1 : 0;
+                updateSlider();
+            }, 7000);
+        });
+    </script>
+</body>
+</html>

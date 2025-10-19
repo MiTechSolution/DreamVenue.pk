@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar | GrandVenue Hall Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .sidebar { transition: transform 0.3s ease; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+        }
+        .calendar-day { transition: all 0.2s ease; }
+        .calendar-day:hover { background-color: rgba(212, 175, 55, 0.1); }
+        .booked { background-color: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.5); }
+        .blocked { background-color: rgba(156, 163, 175, 0.3); border: 1px solid rgba(156, 163, 175, 0.5); }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Splash Screen -->
+    <div id="splash" class="fade-in">
+        <div class="text-center">
+            <h1 class="text-4xl font-cinzel font-bold mb-4 gold-gradient">GrandVenue Hall</h1>
+            <p class="text-gray-400">Loading Calendar...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 gold-border-r overflow-y-auto">
+        <div class="p-6">
+            <h1 class="text-2xl font-cinzel font-bold gold-gradient text-center">GrandVenue Admin</h1>
+        </div>
+        <nav class="mt-6">
+            <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-tachometer-alt mr-3"></i>
+                Dashboard
+            </a>
+            <a href="calendar.html" class="flex items-center px-6 py-3 text-yellow-400 bg-gray-800/50 border-r-2 border-yellow-400">
+                <i class="fas fa-calendar-alt mr-3"></i>
+                Calendar
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-bookmark mr-3"></i>
+                Bookings
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-users mr-3"></i>
+                Clients
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-credit-card mr-3"></i>
+                Payments
+            </a>
+            <a href="settings.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-cog mr-3"></i>
+                Settings
+            </a>
+            <a href="login.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors mt-10">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64">
+        <!-- Top Bar -->
+        <header class="bg-gray-900 gold-border-b py-4 px-6 flex justify-between items-center">
+            <button id="sidebarToggle" class="md:hidden text-yellow-400 text-xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-300">Welcome, Admin</span>
+                <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center">
+                    <i class="fas fa-user text-black"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Calendar Content -->
+        <main class="p-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                <h1 class="text-3xl font-cinzel font-bold mb-4 md:mb-0 fade-in">
+                    <span class="gold-gradient">Event Calendar</span>
+                </h1>
+                
+                <div class="flex space-x-4 fade-in" style="transition-delay: 0.2s;">
+                    <button id="blockDateBtn" class="bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-ban mr-2"></i> Block Date
+                    </button>
+                    <button id="unblockDateBtn" class="bg-gray-800 text-white px-4 py-2 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-check-circle mr-2"></i> Unblock Date
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Calendar Navigation -->
+            <div class="bg-gray-900/50 rounded-xl p-6 gold-border mb-6 fade-in" style="transition-delay: 0.3s;">
+                <div class="flex justify-between items-center mb-6">
+                    <button id="prevMonth" class="text-yellow-400 hover:text-yellow-300 text-xl">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h2 id="currentMonth" class="text-2xl font-cinzel font-bold gold-gradient">October 2023</h2>
+                    <button id="nextMonth" class="text-yellow-400 hover:text-yellow-300 text-xl">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <!-- Calendar Grid -->
+                <div id="calendarGrid" class="grid grid-cols-7 gap-2">
+                    <!-- Calendar days will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Legend -->
+            <div class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in" style="transition-delay: 0.4s;">
+                <h3 class="text-lg font-cinzel font-bold mb-4 gold-gradient">Legend</h3>
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 bg-gray-800 border border-gray-700 rounded mr-2"></div>
+                        <span class="text-gray-300">Available</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 booked rounded mr-2"></div>
+                        <span class="text-gray-300">Booked</span>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 blocked rounded mr-2"></div>
+                        <span class="text-gray-300">Blocked</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Hide splash screen after page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('splash').style.display = 'none';
+            }, 1500);
+        });
+
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Sidebar toggle for mobile
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('open');
+            });
+            
+            // Initialize calendar
+            initializeCalendar();
+        });
+
+        // Calendar functionality
+        let currentDate = new Date();
+        let selectedDate = null;
+        
+        // Dummy data for booked dates
+        const bookedDates = [
+            '2023-10-15',
+            '2023-10-22',
+            '2023-11-05',
+            '2023-11-12',
+            '2023-11-18'
+        ];
+        
+        // Dummy data for blocked dates
+        const blockedDates = [
+            '2023-10-10',
+            '2023-10-11',
+            '2023-11-23',
+            '2023-11-24',
+            '2023-11-25'
+        ];
+        
+        function initializeCalendar() {
+            renderCalendar(currentDate);
+            
+            // Event listeners for navigation
+            document.getElementById('prevMonth').addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate);
+            });
+            
+            document.getElementById('nextMonth').addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar(currentDate);
+            });
+            
+            // Event listeners for block/unblock buttons
+            document.getElementById('blockDateBtn').addEventListener('click', function() {
+                if (selectedDate) {
+                    blockDate(selectedDate);
+                } else {
+                    showToast('Please select a date first');
+                }
+            });
+            
+            document.getElementById('unblockDateBtn').addEventListener('click', function() {
+                if (selectedDate) {
+                    unblockDate(selectedDate);
+                } else {
+                    showToast('Please select a date first');
+                }
+            });
+        }
+        
+        function renderCalendar(date) {
+            const calendarGrid = document.getElementById('calendarGrid');
+            const currentMonthElement = document.getElementById('currentMonth');
+            
+            // Set current month text
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            currentMonthElement.textContent = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+            
+            // Clear calendar grid
+            calendarGrid.innerHTML = '';
+            
+            // Add day headers
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayNames.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'text-center text-gray-400 font-medium py-2';
+                dayElement.textContent = day;
+                calendarGrid.appendChild(dayElement);
+            });
+            
+            // Get first day of month and number of days
+            const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startingDay = firstDay.getDay();
+            
+            // Add empty cells for days before the first day of the month
+            for (let i = 0; i < startingDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'h-12';
+                calendarGrid.appendChild(emptyCell);
+            }
+            
+            // Add days of the month
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day h-12 flex items-center justify-center rounded-lg border border-gray-700 cursor-pointer';
+                
+                const currentDay = new Date(date.getFullYear(), date.getMonth(), day);
+                const dateString = formatDate(currentDay);
+                
+                // Check if date is today
+                if (currentDay.getTime() === today.getTime()) {
+                    dayElement.classList.add('gold-border');
+                }
+                
+                // Check if date is booked
+                if (bookedDates.includes(dateString)) {
+                    dayElement.classList.add('booked');
+                    dayElement.title = 'Booked - ' + getEventType(dateString);
+                }
+                
+                // Check if date is blocked
+                if (blockedDates.includes(dateString)) {
+                    dayElement.classList.add('blocked');
+                    dayElement.title = 'Blocked';
+                }
+                
+                // Check if date is in the past
+                if (currentDay < today) {
+                    dayElement.classList.add('opacity-50');
+                    dayElement.classList.remove('cursor-pointer');
+                }
+                
+                dayElement.textContent = day;
+                dayElement.dataset.date = dateString;
+                
+                // Add click event
+                if (currentDay >= today) {
+                    dayElement.addEventListener('click', function() {
+                        // Remove selection from previously selected date
+                        if (selectedDate) {
+                            const prevSelected = document.querySelector(`[data-date="${selectedDate}"]`);
+                            if (prevSelected) {
+                                prevSelected.classList.remove('ring-2', 'ring-yellow-400');
+                            }
+                        }
+                        
+                        // Add selection to current date
+                        dayElement.classList.add('ring-2', 'ring-yellow-400');
+                        selectedDate = dateString;
+                    });
+                }
+                
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+        
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        function getEventType(dateString) {
+            // In a real application, this would fetch from a database
+            const events = {
+                '2023-10-15': 'Wedding - Sarah Johnson',
+                '2023-10-22': 'Corporate Event - Michael Roberts',
+                '2023-11-05': 'Birthday - Emily Chen',
+                '2023-11-12': 'Anniversary - James Wilson',
+                '2023-11-18': 'Engagement - Lisa Thompson'
+            };
+            
+            return events[dateString] || 'Event';
+        }
+        
+        function blockDate(dateString) {
+            if (bookedDates.includes(dateString)) {
+                showToast('Cannot block a booked date');
+                return;
+            }
+            
+            if (!blockedDates.includes(dateString)) {
+                blockedDates.push(dateString);
+                renderCalendar(currentDate);
+                showToast('Date blocked successfully');
+            } else {
+                showToast('Date is already blocked');
+            }
+        }
+        
+        function unblockDate(dateString) {
+            const index = blockedDates.indexOf(dateString);
+            if (index > -1) {
+                blockedDates.splice(index, 1);
+                renderCalendar(currentDate);
+                showToast('Date unblocked successfully');
+            } else {
+                showToast('Date is not blocked');
+            }
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

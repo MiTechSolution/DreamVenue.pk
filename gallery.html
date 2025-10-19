@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | GrandVenue Hall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        .gallery-item { position: relative; overflow: hidden; cursor: pointer; }
+        .gallery-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .lightbox.active { display: flex; }
+        .lightbox-content { max-width: 90%; max-height: 90%; position: relative; }
+        .lightbox-img { max-width: 100%; max-height: 80vh; border-radius: 8px; }
+        .lightbox-close { position: absolute; top: -40px; right: 0; color: white; font-size: 2rem; cursor: pointer; }
+        .lightbox-caption { color: white; text-align: center; margin-top: 1rem; font-size: 1.2rem; }
+        .filter-btn.active { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/90 backdrop-blur-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-cinzel font-bold gold-gradient">GrandVenue Hall</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="hover:text-yellow-400 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-yellow-400 transition-colors">About</a>
+                <a href="gallery.html" class="hover:text-yellow-400 transition-colors">Gallery</a>
+                <a href="contact.html" class="hover:text-yellow-400 transition-colors">Contact</a>
+                <a href="Register.html" class="hover:text-yellow-400 transition-colors">ٌRegister</a>
+                <a href="booking.html" class="hover:text-yellow-400 transition-colors">Book Now</a>
+            </div>
+            <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium">Book Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 bg-gradient-to-br from-black via-gray-900 to-black">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl md:text-6xl font-cinzel font-bold mb-6 fade-in">
+                <span class="gold-gradient">Our Gallery</span>
+            </h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto fade-in" style="transition-delay: 0.2s;">
+                Explore the elegance and sophistication of GrandVenue Hall through our stunning event portfolio
+            </p>
+        </div>
+    </section>
+
+    <!-- Gallery Filters -->
+    <section class="py-10 bg-black">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center gap-4 mb-12 fade-in">
+                <button class="filter-btn gold-button px-6 py-2 rounded-full font-medium active" data-filter="all">
+                    All Events
+                </button>
+                <button class="filter-btn bg-gray-800 text-white px-6 py-2 rounded-full font-medium border border-gray-700 hover:bg-gray-700 transition-colors" data-filter="wedding">
+                    Weddings
+                </button>
+                <button class="filter-btn bg-gray-800 text-white px-6 py-2 rounded-full font-medium border border-gray-700 hover:bg-gray-700 transition-colors" data-filter="corporate">
+                    Corporate
+                </button>
+                <button class="filter-btn bg-gray-800 text-white px-6 py-2 rounded-full font-medium border border-gray-700 hover:bg-gray-700 transition-colors" data-filter="birthday">
+                    Birthdays
+                </button>
+                <button class="filter-btn bg-gray-800 text-white px-6 py-2 rounded-full font-medium border border-gray-700 hover:bg-gray-700 transition-colors" data-filter="other">
+                    Others
+                </button>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="galleryGrid">
+                <!-- Wedding Events -->
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="wedding">
+                    <div class="h-80 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Elegant Wedding</h3>
+                            <p class="text-gray-300 text-center px-4">Sarah & Michael's magical wedding celebration</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="wedding" style="transition-delay: 0.1s;">
+                    <div class="h-80 bg-gradient-to-br from-purple-900 to-pink-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Royal Wedding</h3>
+                            <p class="text-gray-300 text-center px-4">Jessica & Robert's fairytale wedding</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Corporate Events -->
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="corporate" style="transition-delay: 0.2s;">
+                    <div class="h-80 bg-gradient-to-br from-blue-900 to-indigo-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Corporate Gala</h3>
+                            <p class="text-gray-300 text-center px-4">Annual corporate event for TechSolutions Inc.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="corporate" style="transition-delay: 0.3s;">
+                    <div class="h-80 bg-gradient-to-br from-teal-900 to-cyan-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Product Launch</h3>
+                            <p class="text-gray-300 text-center px-4">InnovateCorp's flagship product unveiling</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Birthday Events -->
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="birthday" style="transition-delay: 0.4s;">
+                    <div class="h-80 bg-gradient-to-br from-pink-900 to-red-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Sweet 16</h3>
+                            <p class="text-gray-300 text-center px-4">Emily's unforgettable birthday celebration</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="birthday" style="transition-delay: 0.5s;">
+                    <div class="h-80 bg-gradient-to-br from-orange-900 to-amber-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">50th Birthday</h3>
+                            <p class="text-gray-300 text-center px-4">James' golden birthday extravaganza</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Other Events -->
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="other" style="transition-delay: 0.6s;">
+                    <div class="h-80 bg-gradient-to-br from-green-900 to-emerald-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Charity Gala</h3>
+                            <p class="text-gray-300 text-center px-4">Annual fundraiser for Children's Hope Foundation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="other" style="transition-delay: 0.7s;">
+                    <div class="h-80 bg-gradient-to-br from-amber-900 to-yellow-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Award Ceremony</h3>
+                            <p class="text-gray-300 text-center px-4">Regional business excellence awards</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="gallery-item rounded-lg overflow-hidden gold-border fade-in" data-category="wedding" style="transition-delay: 0.8s;">
+                    <div class="h-80 bg-gradient-to-br from-rose-900 to-pink-800 flex items-center justify-center relative">
+                        <i class="fas fa-image text-6xl text-yellow-400"></i>
+                        <div class="gallery-overlay">
+                            <h3 class="text-2xl font-cinzel font-bold text-yellow-400 mb-2">Garden Wedding</h3>
+                            <p class="text-gray-300 text-center px-4">Lauren & David's romantic garden ceremony</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close" id="lightboxClose">
+                <i class="fas fa-times"></i>
+            </span>
+            <img class="lightbox-img" id="lightboxImg" src="" alt="">
+            <div class="lightbox-caption" id="lightboxCaption"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t gold-border">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="text-center md:text-left">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Address</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>
+                        123 Luxury Avenue
+                    </p>
+                    <p class="text-gray-300 mb-2">Prestige District</p>
+                    <p class="text-gray-300">Metropolis, MP 12345</p>
+                </div>
+                
+                <div class="text-center">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Contact</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-phone text-yellow-400 mr-2"></i>
+                        (555) 123-4567
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-envelope text-yellow-400 mr-2"></i>
+                        info@grandvenuehall.com
+                    </p>
+                    <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium inline-block mt-4">
+                        Book a Tour
+                    </a>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Follow Us</h3>
+                    <div class="flex justify-center md:justify-end space-x-4">
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 mt-6 text-sm">
+                        &copy; 2023 GrandVenue Hall. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Initialize gallery functionality
+            initializeGallery();
+        });
+
+        // Gallery functionality
+        function initializeGallery() {
+            // Filter buttons
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => {
+                        btn.classList.remove('active', 'gold-button');
+                        btn.classList.add('bg-gray-800', 'text-white', 'border', 'border-gray-700');
+                    });
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active', 'gold-button');
+                    this.classList.remove('bg-gray-800', 'text-white', 'border', 'border-gray-700');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    
+                    // Show/hide gallery items based on filter
+                    galleryItems.forEach(item => {
+                        if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                            item.style.display = 'block';
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                            }, 10);
+                        } else {
+                            item.style.opacity = '0';
+                            setTimeout(() => {
+                                item.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+            
+            // Lightbox functionality
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImg');
+            const lightboxCaption = document.getElementById('lightboxCaption');
+            const lightboxClose = document.getElementById('lightboxClose');
+            
+            galleryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const overlay = this.querySelector('.gallery-overlay');
+                    const title = overlay.querySelector('h3').textContent;
+                    const description = overlay.querySelector('p').textContent;
+                    
+                    // In a real implementation, you would use actual image URLs
+                    // For this demo, we'll use a placeholder
+                    lightboxImg.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgZmlsbD0iIzNBNEE1QiIvPjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiNEMUFFMzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPkdyYW5kVmVudWUgSGFsbDwvdGV4dD48dGV4dCB4PSI0MDAiIHk9IjMzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE2IiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5FdmVudCBJbWFnZTwvdGV4dD48L3N2Zz4=';
+                    lightboxCaption.textContent = `${title} - ${description}`;
+                    lightbox.classList.add('active');
+                });
+            });
+            
+            // Close lightbox
+            lightboxClose.addEventListener('click', function() {
+                lightbox.classList.remove('active');
+            });
+            
+            // Close lightbox when clicking outside the image
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    lightbox.classList.remove('active');
+                }
+            });
+            
+            // Close lightbox with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    lightbox.classList.remove('active');
+                }
+            });
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

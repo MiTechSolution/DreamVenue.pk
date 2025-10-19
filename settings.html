@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | GrandVenue Hall Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .sidebar { transition: transform 0.3s ease; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+        }
+        .error { border-color: #f87171 !important; }
+        .error-message { color: #f87171; font-size: 0.875rem; margin-top: 0.25rem; }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Splash Screen -->
+    <div id="splash" class="fade-in">
+        <div class="text-center">
+            <h1 class="text-4xl font-cinzel font-bold mb-4 gold-gradient">GrandVenue Hall</h1>
+            <p class="text-gray-400">Loading Settings...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 gold-border-r overflow-y-auto">
+        <div class="p-6">
+            <h1 class="text-2xl font-cinzel font-bold gold-gradient text-center">GrandVenue Admin</h1>
+        </div>
+        <nav class="mt-6">
+            <a href="dashboard.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-tachometer-alt mr-3"></i>
+                Dashboard
+            </a>
+            <a href="calendar.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-calendar-alt mr-3"></i>
+                Calendar
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-bookmark mr-3"></i>
+                Bookings
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-users mr-3"></i>
+                Clients
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-credit-card mr-3"></i>
+                Payments
+            </a>
+            <a href="settings.html" class="flex items-center px-6 py-3 text-yellow-400 bg-gray-800/50 border-r-2 border-yellow-400">
+                <i class="fas fa-cog mr-3"></i>
+                Settings
+            </a>
+            <a href="login.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors mt-10">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64">
+        <!-- Top Bar -->
+        <header class="bg-gray-900 gold-border-b py-4 px-6 flex justify-between items-center">
+            <button id="sidebarToggle" class="md:hidden text-yellow-400 text-xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-300">Welcome, Admin</span>
+                <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center">
+                    <i class="fas fa-user text-black"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Settings Content -->
+        <main class="p-6">
+            <h1 class="text-3xl font-cinzel font-bold mb-8 fade-in">
+                <span class="gold-gradient">Settings</span>
+            </h1>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Navigation -->
+                <div class="lg:col-span-1 fade-in">
+                    <div class="bg-gray-900/50 rounded-xl p-6 gold-border">
+                        <h2 class="text-xl font-cinzel font-bold mb-4 gold-gradient">Settings Menu</h2>
+                        <nav class="space-y-2">
+                            <a href="#profile" class="block px-4 py-2 rounded-lg bg-gray-800 text-yellow-400">Profile Information</a>
+                            <a href="#password" class="block px-4 py-2 rounded-lg hover:bg-gray-800/50 text-gray-300 transition-colors">Change Password</a>
+                            <a href="#hall" class="block px-4 py-2 rounded-lg hover:bg-gray-800/50 text-gray-300 transition-colors">Hall Details</a>
+                            <a href="#notifications" class="block px-4 py-2 rounded-lg hover:bg-gray-800/50 text-gray-300 transition-colors">Notifications</a>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Settings Forms -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Profile Information -->
+                    <div id="profile" class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in" style="transition-delay: 0.1s;">
+                        <h2 class="text-xl font-cinzel font-bold mb-6 gold-gradient">Profile Information</h2>
+                        
+                        <form id="profileForm">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="firstName" class="block text-gray-300 mb-2">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" value="Admin">
+                                </div>
+                                
+                                <div>
+                                    <label for="lastName" class="block text-gray-300 mb-2">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" value="User">
+                                </div>
+                                
+                                <div class="md:col-span-2">
+                                    <label for="email" class="block text-gray-300 mb-2">Email Address</label>
+                                    <input type="email" id="email" name="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" value="admin@grandvenuehall.com">
+                                </div>
+                                
+                                <div class="md:col-span-2">
+                                    <label for="phone" class="block text-gray-300 mb-2">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" value="(555) 123-4567">
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <button type="submit" class="gold-button px-6 py-3 rounded-lg font-medium">
+                                    Update Profile <i class="fas fa-save ml-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Change Password -->
+                    <div id="password" class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in" style="transition-delay: 0.2s;">
+                        <h2 class="text-xl font-cinzel font-bold mb-6 gold-gradient">Change Password</h2>
+                        
+                        <form id="passwordForm">
+                            <div class="space-y-6">
+                                <div>
+                                    <label for="currentPassword" class="block text-gray-300 mb-2">Current Password</label>
+                                    <input type="password" id="currentPassword" name="currentPassword" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                                    <div class="error-message" id="currentPasswordError"></div>
+                                </div>
+                                
+                                <div>
+                                    <label for="newPassword" class="block text-gray-300 mb-2">New Password</label>
+                                    <input type="password" id="newPassword" name="newPassword" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                                    <div class="error-message" id="newPasswordError"></div>
+                                </div>
+                                
+                                <div>
+                                    <label for="confirmPassword" class="block text-gray-300 mb-2">Confirm New Password</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                                    <div class="error-message" id="confirmPasswordError"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <button type="submit" class="gold-button px-6 py-3 rounded-lg font-medium">
+                                    Change Password <i class="fas fa-key ml-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Hall Details -->
+                    <div id="hall" class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in" style="transition-delay: 0.3s;">
+                        <h2 class="text-xl font-cinzel font-bold mb-6 gold-gradient">Hall Details</h2>
+                        
+                        <form id="hallForm">
+                            <div class="space-y-6">
+                                <div>
+                                    <label for="hallName" class="block text-gray-300 mb-2">Hall Name</label>
+                                    <input type="text" id="hallName" name="hallName" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" value="GrandVenue Hall">
+                                </div>
+                                
+                                <div>
+                                    <label for="capacity" class="block text-gray-300 mb-2">Maximum Capacity</label>
+                                    <input type="number" id="capacity" name="capacity" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" value="500">
+                                </div>
+                                
+                                <div>
+                                    <label for="basePrice" class="block text-gray-300 mb-2">Base Price ($)</label>
+                                    <input type="number" id="basePrice" name="basePrice" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" value="5000">
+                                </div>
+                                
+                                <div>
+                                    <label for="description" class="block text-gray-300 mb-2">Description</label>
+                                    <textarea id="description" name="description" rows="4" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">GrandVenue Hall stands as the epitome of luxury and sophistication in event hosting. With our exquisite black and gold interiors, state-of-the-art facilities, and impeccable service, we create the perfect backdrop for your most important celebrations.</textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <button type="submit" class="gold-button px-6 py-3 rounded-lg font-medium">
+                                    Update Hall Details <i class="fas fa-save ml-2"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Hide splash screen after page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('splash').style.display = 'none';
+            }, 1500);
+        });
+
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Sidebar toggle for mobile
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('open');
+            });
+            
+            // Settings navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all nav items
+                    document.querySelectorAll('nav a').forEach(item => {
+                        item.classList.remove('bg-gray-800', 'text-yellow-400');
+                        item.classList.add('text-gray-300', 'hover:bg-gray-800/50');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('bg-gray-800', 'text-yellow-400');
+                    this.classList.remove('text-gray-300', 'hover:bg-gray-800/50');
+                    
+                    // Scroll to section
+                    const targetId = this.getAttribute('href');
+                    document.querySelector(targetId).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // Form submissions
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showToast('Profile updated successfully');
+            });
+            
+            document.getElementById('passwordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset errors
+                resetErrors();
+                
+                // Get form values
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                let isValid = true;
+                
+                // Validate current password
+                if (!currentPassword) {
+                    showError('currentPassword', 'Current password is required');
+                    isValid = false;
+                } else if (currentPassword !== '1234') { // Demo validation
+                    showError('currentPassword', 'Current password is incorrect');
+                    isValid = false;
+                }
+                
+                // Validate new password
+                if (!newPassword) {
+                    showError('newPassword', 'New password is required');
+                    isValid = false;
+                } else if (newPassword.length < 6) {
+                    showError('newPassword', 'Password must be at least 6 characters');
+                    isValid = false;
+                }
+                
+                // Validate confirm password
+                if (!confirmPassword) {
+                    showError('confirmPassword', 'Please confirm your new password');
+                    isValid = false;
+                } else if (newPassword !== confirmPassword) {
+                    showError('confirmPassword', 'Passwords do not match');
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    showToast('Password changed successfully');
+                    document.getElementById('passwordForm').reset();
+                }
+            });
+            
+            document.getElementById('hallForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showToast('Hall details updated successfully');
+            });
+        });
+        
+        // Helper functions
+        function resetErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+            
+            const inputElements = document.querySelectorAll('input');
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+        
+        function showError(fieldId, message) {
+            document.getElementById(fieldId).classList.add('error');
+            document.getElementById(`${fieldId}Error`).textContent = message;
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

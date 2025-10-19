@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | GrandVenue Hall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        .error { border-color: #f87171 !important; }
+        .error-message { color: #f87171; font-size: 0.875rem; margin-top: 0.25rem; }
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Splash Screen -->
+    <div id="splash" class="fade-in">
+        <div class="text-center">
+            <h1 class="text-4xl font-cinzel font-bold mb-4 gold-gradient">GrandVenue Hall</h1>
+            <p class="text-gray-400">Loading Admin Portal...</p>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <section class="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto text-center mb-10 fade-in">
+                <h1 class="text-4xl font-cinzel font-bold mb-4 gold-gradient">Admin Login</h1>
+                <p class="text-gray-400">Access the GrandVenue Hall management portal</p>
+            </div>
+            
+            <div class="max-w-md mx-auto fade-in" style="transition-delay: 0.2s;">
+                <form id="loginForm" class="bg-gray-900/50 rounded-xl p-8 gold-border">
+                    <div class="mb-6">
+                        <label for="username" class="block text-gray-300 mb-2">Username</label>
+                        <input type="text" id="username" name="username" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your username">
+                        <div class="error-message" id="usernameError"></div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-300 mb-2">Password</label>
+                        <input type="password" id="password" name="password" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your password">
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    
+                    <button type="submit" class="w-full gold-button py-3 rounded-lg font-medium mb-4">
+                        Sign In <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                    
+                    <div class="text-center text-gray-400 text-sm">
+                        <p>Demo credentials: admin / 1234</p>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-6">
+                    <a href="index.html" class="text-yellow-400 hover:text-yellow-300 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Hide splash screen after page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('splash').style.display = 'none';
+            }, 1500);
+        });
+
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+        });
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset errors
+            resetErrors();
+            
+            // Get form values
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            let isValid = true;
+            
+            // Validate username
+            if (!username) {
+                showError('username', 'Username is required');
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password) {
+                showError('password', 'Password is required');
+                 isValid = false;
+            }
+            
+            // If form is valid, check credentials
+            if (isValid) {
+                // Hardcoded credentials (admin / 1234)
+                if (username === 'admin' && password === '1234') {
+                    showToast('Login successful! Redirecting...');
+                    
+                    // Redirect to dashboard after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    showError('username', 'Invalid username or password');
+                    showError('password', 'Invalid username or password');
+                }
+            }
+        });
+        
+        // Helper functions
+        function resetErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+            
+            const inputElements = document.querySelectorAll('input');
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+        
+        function showError(fieldId, message) {
+            document.getElementById(fieldId).classList.add('error');
+            document.getElementById(`${fieldId}Error`).textContent = message;
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

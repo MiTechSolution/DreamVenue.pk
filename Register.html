@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | GrandVenue Hall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        .error { border-color: #f87171 !important; }
+        .error-message { color: #f87171; font-size: 0.875rem; margin-top: 0.25rem; }
+        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #9CA3AF; }
+        .password-toggle:hover { color: #D4AF37; }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/90 backdrop-blur-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-cinzel font-bold gold-gradient">GrandVenue Hall</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="hover:text-yellow-400 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-yellow-400 transition-colors">About</a>
+                <a href="gallery.html" class="hover:text-yellow-400 transition-colors">Gallery</a>
+                <a href="contact.html" class="hover:text-yellow-400 transition-colors">Contact</a>
+                <a href="login.html" class="hover:text-yellow-400 transition-colors">Login</a>
+            </div>
+            <a href="login.html" class="gold-button px-6 py-2 rounded-full font-medium">Login</a>
+        </div>
+    </nav>
+
+    <!-- Registration Section -->
+    <section class="min-h-screen flex items-center justify-center pt-16 bg-gradient-to-br from-black via-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto text-center mb-10 fade-in">
+                <h1 class="text-4xl font-cinzel font-bold mb-4 gold-gradient">Create Account</h1>
+                <p class="text-gray-400">Join GrandVenue Hall to book our luxurious venue for your special events</p>
+            </div>
+            
+            <div class="max-w-md mx-auto fade-in" style="transition-delay: 0.2s;">
+                <form id="registerForm" class="bg-gray-900/50 rounded-xl p-8 gold-border">
+                    <div class="space-y-6">
+                        <!-- Full Name -->
+                        <div>
+                            <label for="fullName" class="block text-gray-300 mb-2">Full Name *</label>
+                            <div class="relative">
+                                <input type="text" id="fullName" name="fullName" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-11 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your full name">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-user text-yellow-400"></i>
+                                </div>
+                            </div>
+                            <div class="error-message" id="fullNameError"></div>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-gray-300 mb-2">Email Address *</label>
+                            <div class="relative">
+                                <input type="email" id="email" name="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-11 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your email address">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-yellow-400"></i>
+                                </div>
+                            </div>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        
+                        <!-- Password -->
+                        <div>
+                            <label for="password" class="block text-gray-300 mb-2">Password *</label>
+                            <div class="relative">
+                                <input type="password" id="password" name="password" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-11 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Create a password">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-yellow-400"></i>
+                                </div>
+                                <span class="password-toggle" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                            <div class="text-gray-400 text-sm mt-1">
+                                <ul class="list-disc list-inside space-y-1">
+                                    <li id="length" class="text-gray-500">At least 8 characters</li>
+                                    <li id="uppercase" class="text-gray-500">One uppercase letter</li>
+                                    <li id="lowercase" class="text-gray-500">One lowercase letter</li>
+                                    <li id="number" class="text-gray-500">One number</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <!-- Confirm Password -->
+                        <div>
+                            <label for="confirmPassword" class="block text-gray-300 mb-2">Confirm Password *</label>
+                            <div class="relative">
+                                <input type="password" id="confirmPassword" name="confirmPassword" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-11 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Confirm your password">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-yellow-400"></i>
+                                </div>
+                                <span class="password-toggle" id="toggleConfirmPassword">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            <div class="error-message" id="confirmPasswordError"></div>
+                        </div>
+                        
+                        <!-- Terms and Conditions -->
+                        <div class="mt-4">
+                            <div class="flex items-start">
+                                <input type="checkbox" id="terms" name="terms" class="mt-1 mr-3 rounded focus:ring-yellow-400 text-yellow-400 bg-gray-800 border-gray-700">
+                                <label for="terms" class="text-gray-300 text-sm">
+                                    I agree to the <a href="#" class="text-yellow-400 hover:underline">Terms and Conditions</a> and <a href="#" class="text-yellow-400 hover:underline">Privacy Policy</a>
+                                </label>
+                            </div>
+                            <div class="error-message" id="termsError"></div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="mt-6">
+                            <button type="submit" class="w-full gold-button py-3 rounded-lg font-medium">
+                                Create Account <i class="fas fa-user-plus ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Login Link -->
+                    <div class="text-center mt-6">
+                        <p class="text-gray-400">
+                            Already have an account? 
+                            <a href="login.html" class="text-yellow-400 hover:text-yellow-300 font-medium">Sign In</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t gold-border">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="text-center md:text-left">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Address</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>
+                        123 Luxury Avenue
+                    </p>
+                    <p class="text-gray-300 mb-2">Prestige District</p>
+                    <p class="text-gray-300">Metropolis, MP 12345</p>
+                </div>
+                
+                <div class="text-center">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Contact</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-phone text-yellow-400 mr-2"></i>
+                        (555) 123-4567
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-envelope text-yellow-400 mr-2"></i>
+                        info@grandvenuehall.com
+                    </p>
+                    <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium inline-block mt-4">
+                        Book a Tour
+                    </a>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Follow Us</h3>
+                    <div class="flex justify-center md:justify-end space-x-4">
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 mt-6 text-sm">
+                        &copy; 2023 GrandVenue Hall. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Initialize registration form
+            initializeRegistrationForm();
+        });
+
+        // Registration form functionality
+        function initializeRegistrationForm() {
+            // Password toggle functionality
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Password strength validation
+            passwordInput.addEventListener('input', function() {
+                validatePasswordStrength(this.value);
+            });
+            
+            // Form submission
+            document.getElementById('registerForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset errors
+                resetErrors();
+                
+                // Get form values
+                const fullName = document.getElementById('fullName').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const terms = document.getElementById('terms').checked;
+                
+                let isValid = true;
+                
+                // Validate full name
+                if (!fullName) {
+                    showError('fullName', 'Full name is required');
+                    isValid = false;
+                } else if (fullName.length < 2) {
+                    showError('fullName', 'Full name must be at least 2 characters');
+                    isValid = false;
+                }
+                
+                // Validate email
+                if (!email) {
+                    showError('email', 'Email is required');
+                    isValid = false;
+                } else if (!isValidEmail(email)) {
+                    showError('email', 'Please enter a valid email address');
+                    isValid = false;
+                } else if (isEmailRegistered(email)) {
+                    showError('email', 'This email is already registered');
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (!password) {
+                    showError('password', 'Password is required');
+                    isValid = false;
+                } else if (!isValidPassword(password)) {
+                    showError('password', 'Password does not meet requirements');
+                    isValid = false;
+                }
+                
+                // Validate confirm password
+                if (!confirmPassword) {
+                    showError('confirmPassword', 'Please confirm your password');
+                    isValid = false;
+                } else if (password !== confirmPassword) {
+                    showError('confirmPassword', 'Passwords do not match');
+                    isValid = false;
+                }
+                
+                // Validate terms
+                if (!terms) {
+                    showError('terms', 'You must agree to the terms and conditions');
+                    isValid = false;
+                }
+                
+                // If form is valid, save user and redirect
+                if (isValid) {
+                    // Create user object
+                    const user = {
+                        id: generateUserId(),
+                        fullName,
+                        email,
+                        password, // In a real app, this should be hashed
+                        role: 'user', // Default role
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    // Save user to localStorage
+                    saveUser(user);
+                    
+                    // Show success message
+                    showToast('Account created successfully! Redirecting to login...');
+                    
+                    // Redirect to login page after a short delay
+                    setTimeout(() => {
+                        window.location.href = 'signIn.html';
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Password strength validation
+        function validatePasswordStrength(password) {
+            const length = document.getElementById('length');
+            const uppercase = document.getElementById('uppercase');
+            const lowercase = document.getElementById('lowercase');
+            const number = document.getElementById('number');
+            
+            // Check length
+            if (password.length >= 8) {
+                length.classList.remove('text-gray-500');
+                length.classList.add('text-green-500');
+            } else {
+                length.classList.remove('text-green-500');
+                length.classList.add('text-gray-500');
+            }
+            
+            // Check uppercase
+            if (/[A-Z]/.test(password)) {
+                uppercase.classList.remove('text-gray-500');
+                uppercase.classList.add('text-green-500');
+            } else {
+                uppercase.classList.remove('text-green-500');
+                uppercase.classList.add('text-gray-500');
+            }
+            
+            // Check lowercase
+            if (/[a-z]/.test(password)) {
+                lowercase.classList.remove('text-gray-500');
+                lowercase.classList.add('text-green-500');
+            } else {
+                lowercase.classList.remove('text-green-500');
+                lowercase.classList.add('text-gray-500');
+            }
+            
+            // Check number
+            if (/[0-9]/.test(password)) {
+                number.classList.remove('text-gray-500');
+                number.classList.add('text-green-500');
+            } else {
+                number.classList.remove('text-green-500');
+                number.classList.add('text-gray-500');
+            }
+        }
+        
+        // Check if email is already registered
+        function isEmailRegistered(email) {
+            const users = JSON.parse(localStorage.getItem('grandvenue_users') || '[]');
+            return users.some(user => user.email === email);
+        }
+        
+        // Save user to localStorage
+        function saveUser(user) {
+            const users = JSON.parse(localStorage.getItem('grandvenue_users') || '[]');
+            users.push(user);
+            localStorage.setItem('grandvenue_users', JSON.stringify(users));
+        }
+        
+        // Generate unique user ID
+        function generateUserId() {
+            return 'user_' + Date.now().toString() + Math.random().toString(36).substr(2, 9);
+        }
+        
+        // Helper functions
+        function resetErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+            
+            const inputElements = document.querySelectorAll('input');
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+        
+        function showError(fieldId, message) {
+            document.getElementById(fieldId).classList.add('error');
+            document.getElementById(`${fieldId}Error`).textContent = message;
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        function isValidPassword(password) {
+            // At least 8 characters, one uppercase, one lowercase, one number
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            return passwordRegex.test(password);
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

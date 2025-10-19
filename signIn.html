@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | GrandVenue Hall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        .error { border-color: #f87171 !important; }
+        .error-message { color: #f87171; font-size: 0.875rem; margin-top: 0.25rem; }
+        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #9CA3AF; }
+        .password-toggle:hover { color: #D4AF37; }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/90 backdrop-blur-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-cinzel font-bold gold-gradient">GrandVenue Hall</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="hover:text-yellow-400 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-yellow-400 transition-colors">About</a>
+                <a href="gallery.html" class="hover:text-yellow-400 transition-colors">Gallery</a>
+                <a href="contact.html" class="hover:text-yellow-400 transition-colors">Contact</a>
+                <a href="Register.html" class="hover:text-yellow-400 transition-colors">Register</a>
+            </div>
+            <a href="register.html" class="gold-button px-6 py-2 rounded-full font-medium">Register</a>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="min-h-screen flex items-center justify-center pt-16 bg-gradient-to-br from-black via-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto text-center mb-10 fade-in">
+                <h1 class="text-4xl font-cinzel font-bold mb-4 gold-gradient">Welcome Back</h1>
+                <p class="text-gray-400">Sign in to your GrandVenue Hall account</p>
+            </div>
+            
+            <div class="max-w-md mx-auto fade-in" style="transition-delay: 0.2s;">
+                <form id="loginForm" class="bg-gray-900/50 rounded-xl p-8 gold-border">
+                    <div class="space-y-6">
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-gray-300 mb-2">Email Address *</label>
+                            <div class="relative">
+                                <input type="email" id="email" name="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-11 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your email address">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-envelope text-yellow-400"></i>
+                                </div>
+                            </div>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        
+                        <!-- Password -->
+                        <div>
+                            <label for="password" class="block text-gray-300 mb-2">Password *</label>
+                            <div class="relative">
+                                <input type="password" id="password" name="password" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 pl-11 pr-10 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your password">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-yellow-400"></i>
+                                </div>
+                                <span class="password-toggle" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            <div class="error-message" id="passwordError"></div>
+                        </div>
+                        
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember" name="remember" class="rounded focus:ring-yellow-400 text-yellow-400 bg-gray-800 border-gray-700">
+                                <label for="remember" class="ml-2 text-gray-300 text-sm">Remember me</label>
+                            </div>
+                            <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm">Forgot password?</a>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="mt-6">
+                            <button type="submit" class="w-full gold-button py-3 rounded-lg font-medium">
+                                Sign In <i class="fas fa-sign-in-alt ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Demo Credentials -->
+                    <div class="mt-6 p-4 bg-gray-800/50 rounded-lg">
+                        <h3 class="text-yellow-400 font-semibold mb-2">Demo Credentials</h3>
+                        <div class="text-sm text-gray-400 space-y-1">
+                            <p><strong>Admin:</strong> admin@grandvenue.com / admin123</p>
+                            <p><strong>User:</strong> Create an account or use any valid credentials</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Register Link -->
+                    <div class="text-center mt-6">
+                        <p class="text-gray-400">
+                            Don't have an account? 
+                            <a href="register.html" class="text-yellow-400 hover:text-yellow-300 font-medium">Create Account</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t gold-border">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="text-center md:text-left">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Address</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>
+                        123 Luxury Avenue
+                    </p>
+                    <p class="text-gray-300 mb-2">Prestige District</p>
+                    <p class="text-gray-300">Metropolis, MP 12345</p>
+                </div>
+                
+                <div class="text-center">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Contact</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-phone text-yellow-400 mr-2"></i>
+                        (555) 123-4567
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-envelope text-yellow-400 mr-2"></i>
+                        info@grandvenuehall.com
+                    </p>
+                    <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium inline-block mt-4">
+                        Book a Tour
+                    </a>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Follow Us</h3>
+                    <div class="flex justify-center md:justify-end space-x-4">
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 mt-6 text-sm">
+                        &copy; 2023 GrandVenue Hall. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Initialize login form
+            initializeLoginForm();
+        });
+
+        // Login form functionality
+        function initializeLoginForm() {
+            // Password toggle functionality
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+            
+            // Form submission
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset errors
+                resetErrors();
+                
+                // Get form values
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const remember = document.getElementById('remember').checked;
+                
+                let isValid = true;
+                
+                // Validate email
+                if (!email) {
+                    showError('email', 'Email is required');
+                    isValid = false;
+                } else if (!isValidEmail(email)) {
+                    showError('email', 'Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (!password) {
+                    showError('password', 'Password is required');
+                    isValid = false;
+                }
+                
+                // If form is valid, attempt login
+                if (isValid) {
+                    const user = authenticateUser(email, password);
+                    
+                    if (user) {
+                        // Save current user session
+                        localStorage.setItem('currentUser', JSON.stringify(user));
+                        
+                        // Save remember me preference
+                        if (remember) {
+                            localStorage.setItem('rememberMe', 'true');
+                            localStorage.setItem('userEmail', email);
+                        } else {
+                            localStorage.removeItem('rememberMe');
+                            localStorage.removeItem('userEmail');
+                        }
+                        
+                        // Show success message
+                        showToast(`Welcome back, ${user.fullName || user.email}!`);
+                        
+                        // Redirect based on user role
+                        setTimeout(() => {
+                            if (user.role === 'admin') {
+                                window.location.href = 'dashboard.html';
+                            } else {
+                                window.location.href = 'booking.html';
+                            }
+                        }, 1500);
+                    } else {
+                        showError('password', 'Invalid email or password');
+                    }
+                }
+            });
+            
+            // Check if remember me is enabled and pre-fill email
+            if (localStorage.getItem('rememberMe') === 'true') {
+                const savedEmail = localStorage.getItem('userEmail');
+                if (savedEmail) {
+                    document.getElementById('email').value = savedEmail;
+                    document.getElementById('remember').checked = true;
+                }
+            }
+        }
+        
+        // Authenticate user
+        function authenticateUser(email, password) {
+            // Check for admin user
+            if (email === 'admin@grandvenue.com' && password === 'admin123') {
+                return {
+                    id: 'admin_001',
+                    fullName: 'Administrator',
+                    email: 'admin@grandvenue.com',
+                    role: 'admin'
+                };
+            }
+            
+            // Check for regular users in localStorage
+            const users = JSON.parse(localStorage.getItem('grandvenue_users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            return user || null;
+        }
+        
+        // Helper functions
+        function resetErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+            
+            const inputElements = document.querySelectorAll('input');
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+        
+        function showError(fieldId, message) {
+            document.getElementById(fieldId).classList.add('error');
+            document.getElementById(`${fieldId}Error`).textContent = message;
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

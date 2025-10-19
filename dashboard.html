@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | GrandVenue Hall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        #splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; display: flex; justify-content: center; align-items: center; z-index: 9999; }
+        .sidebar { transition: transform 0.3s ease; }
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Splash Screen -->
+    <div id="splash" class="fade-in">
+        <div class="text-center">
+            <h1 class="text-4xl font-cinzel font-bold mb-4 gold-gradient">GrandVenue Hall</h1>
+            <p class="text-gray-400">Loading Dashboard...</p>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar fixed inset-y-0 left-0 z-50 w-64 bg-gray-900 gold-border-r overflow-y-auto">
+        <div class="p-6">
+            <h1 class="text-2xl font-cinzel font-bold gold-gradient text-center">GrandVenue Admin</h1>
+        </div>
+        <nav class="mt-6">
+            <a href="dashboard.html" class="flex items-center px-6 py-3 text-yellow-400 bg-gray-800/50 border-r-2 border-yellow-400">
+                <i class="fas fa-tachometer-alt mr-3"></i>
+                Dashboard
+            </a>
+            <a href="calender.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-calendar-alt mr-3"></i>
+                Calendar
+            </a>
+            <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-bookmark mr-3"></i>
+                Bookings
+            </a>
+            <a href="gallery.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-images mr-3"></i>
+                Gallery
+            </a>
+            <a href="contact.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-address-book mr-3"></i>
+                Contacts
+            </a>
+            <a href="settings.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors">
+                <i class="fas fa-cog mr-3"></i>
+                Settings
+            </a>
+            <a href="login.html" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-800/30 hover:text-yellow-400 transition-colors mt-10">
+                <i class="fas fa-sign-out-alt mr-3"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="md:ml-64">
+        <!-- Top Bar -->
+        <header class="bg-gray-900 gold-border-b py-4 px-6 flex justify-between items-center">
+            <button id="sidebarToggle" class="md:hidden text-yellow-400 text-xl">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-300">Welcome, Admin</span>
+                <div class="w-8 h-8 rounded-full bg-yellow-400 flex items-center justify-center">
+                    <i class="fas fa-user text-black"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6">
+            <h1 class="text-3xl font-cinzel font-bold mb-8 fade-in">
+                <span class="gold-gradient">Dashboard</span>
+            </h1>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-gray-400 text-sm uppercase tracking-wider">Total Bookings</h3>
+                            <p id="totalBookings" class="text-3xl font-bold mt-2">0</p>
+                        </div>
+                        <div class="text-yellow-400 text-2xl">
+                            <i class="fas fa-bookmark"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-arrow-up mr-1"></i> 12% from last month
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in" style="transition-delay: 0.1s;">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-gray-400 text-sm uppercase tracking-wider">Upcoming Events</h3>
+                            <p id="upcomingEvents" class="text-3xl font-bold mt-2">0</p>
+                        </div>
+                        <div class="text-yellow-400 text-2xl">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-yellow-400 text-sm">
+                            Next: <span id="nextEvent">No upcoming events</span>
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in" style="transition-delay: 0.2s;">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="text-gray-400 text-sm uppercase tracking-wider">Total Revenue</h3>
+                            <p class="text-3xl font-bold mt-2">$124,580</p>
+                        </div>
+                        <div class="text-yellow-400 text-2xl">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-400 text-sm">
+                            <i class="fas fa-arrow-up mr-1"></i> 18% from last month
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Bookings Table -->
+            <div class="bg-gray-900/50 rounded-xl p-6 gold-border fade-in" style="transition-delay: 0.3s;">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-cinzel font-bold gold-gradient">Recent Bookings</h2>
+                    <a href="#" class="text-yellow-400 hover:text-yellow-300 text-sm">View All</a>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b border-gray-700">
+                                <th class="py-3 px-4 text-left text-gray-400 font-medium">Booking ID</th>
+                                <th class="py-3 px-4 text-left text-gray-400 font-medium">Client</th>
+                                <th class="py-3 px-4 text-left text-gray-400 font-medium">Event Type</th>
+                                <th class="py-3 px-4 text-left text-gray-400 font-medium">Date</th>
+                                <th class="py-3 px-4 text-left text-gray-400 font-medium">Guests</th>
+                                <th class="py-3 px-4 text-left text-gray-400 font-medium">Status</th>
+                                <th class="py-3 px-4 text-left text-gray-400 font-medium">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                            <!-- Bookings will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Hide splash screen after page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('splash').style.display = 'none';
+            }, 1500);
+        });
+
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Sidebar toggle for mobile
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.querySelector('.sidebar').classList.toggle('open');
+            });
+            
+            // Load and display booking data
+            loadBookingData();
+        });
+
+        // Load booking data from localStorage
+        function loadBookingData() {
+            // Get all keys from localStorage
+            const bookings = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('booking_')) {
+                    const bookingData = JSON.parse(localStorage.getItem(key));
+                    bookings.push(bookingData);
+                }
+            }
+            
+            // Also check for single booking data (from booking form)
+            const singleBooking = localStorage.getItem('bookingData');
+            if (singleBooking) {
+                bookings.push(JSON.parse(singleBooking));
+            }
+            
+            // Update stats
+            document.getElementById('totalBookings').textContent = bookings.length;
+            
+            // Find upcoming events
+            const today = new Date();
+            const upcoming = bookings.filter(booking => {
+                const eventDate = new Date(booking.eventDate);
+                return eventDate >= today;
+            });
+            
+            document.getElementById('upcomingEvents').textContent = upcoming.length;
+            
+            // Find next event
+            if (upcoming.length > 0) {
+                const nextEvent = upcoming.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate))[0];
+                const formattedDate = new Date(nextEvent.eventDate).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric'
+                });
+                document.getElementById('nextEvent').textContent = `${nextEvent.eventType} on ${formattedDate}`;
+            }
+            
+            // Populate table
+            const tableBody = document.getElementById('bookingsTableBody');
+            tableBody.innerHTML = '';
+            
+            if (bookings.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="py-4 px-4 text-center text-gray-400">No bookings found</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            // Sort bookings by date (newest first)
+            bookings.sort((a, b) => new Date(b.submittedAt || b.eventDate) - new Date(a.submittedAt || a.eventDate));
+            
+            // Display recent bookings (limit to 5)
+            const recentBookings = bookings.slice(0, 5);
+            
+            recentBookings.forEach(booking => {
+                const bookingId = booking.bookingId || 'N/A';
+                const fullName = booking.fullName || 'Unknown';
+                const eventType = booking.eventType || 'N/A';
+                const eventDate = booking.eventDate ? new Date(booking.eventDate).toLocaleDateString('en-US') : 'N/A';
+                const guests = booking.guests || 'N/A';
+                
+                // Determine status based on date
+                const today = new Date();
+                const eventDateObj = new Date(booking.eventDate);
+                let status = 'Confirmed';
+                let statusClass = 'bg-green-900/50 text-green-400';
+                
+                if (eventDateObj < today) {
+                    status = 'Completed';
+                    statusClass = 'bg-blue-900/50 text-blue-400';
+                } else if ((eventDateObj - today) / (1000 * 60 * 60 * 24) <= 7) {
+                    status = 'Upcoming';
+                    statusClass = 'bg-yellow-900/50 text-yellow-400';
+                }
+                
+                const row = document.createElement('tr');
+                row.className = 'border-b border-gray-800 hover:bg-gray-800/30 transition-colors';
+                row.innerHTML = `
+                    <td class="py-3 px-4">${bookingId}</td>
+                    <td class="py-3 px-4">${fullName}</td>
+                    <td class="py-3 px-4">${eventType}</td>
+                    <td class="py-3 px-4">${eventDate}</td>
+                    <td class="py-3 px-4">${guests}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-1 ${statusClass} rounded-full text-xs">${status}</span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <button class="view-pdf-btn text-yellow-400 hover:text-yellow-300 mr-2" data-booking='${JSON.stringify(booking).replace(/'/g, "&#39;")}'>
+                            <i class="fas fa-file-pdf"></i> View PDF
+                        </button>
+                        <button class="text-yellow-400 hover:text-yellow-300 mr-2">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="text-red-400 hover:text-red-300">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Add event listeners to PDF buttons
+            document.querySelectorAll('.view-pdf-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const bookingData = JSON.parse(this.getAttribute('data-booking').replace(/&#39;/g, "'"));
+                    generatePDF(bookingData);
+                });
+            });
+        }
+        
+        // Generate PDF for booking
+        function generatePDF(bookingData) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add logo/header
+            doc.setFillColor(0, 0, 0);
+            doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(212, 175, 55);
+            doc.setFontSize(24);
+            doc.setFont('helvetica', 'bold');
+            doc.text('GrandVenue Hall', 105, 20, { align: 'center' });
+            
+            // Add title
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(20);
+            doc.text('Booking Confirmation', 105, 60, { align: 'center' });
+            
+            // Add booking details
+            doc.setFontSize(12);
+            let yPosition = 80;
+            
+            // Booking ID
+            doc.setTextColor(100, 100, 100);
+            doc.text('Booking ID:', 20, yPosition);
+            doc.setTextColor(0, 0, 0);
+            doc.text(bookingData.bookingId || 'N/A', 60, yPosition);
+            yPosition += 10;
+            
+            // Client Name
+            doc.setTextColor(100, 100, 100);
+            doc.text('Client Name:', 20, yPosition);
+            doc.setTextColor(0, 0, 0);
+            doc.text(bookingData.fullName || 'Unknown', 60, yPosition);
+            yPosition += 10;
+            
+            // Email
+            doc.setTextColor(100, 100, 100);
+            doc.text('Email:', 20, yPosition);
+            doc.setTextColor(0, 0, 0);
+            doc.text(bookingData.email || 'N/A', 60, yPosition);
+            yPosition += 10;
+            
+            // Phone
+            doc.setTextColor(100, 100, 100);
+            doc.text('Phone:', 20, yPosition);
+            doc.setTextColor(0, 0, 0);
+            doc.text(bookingData.phone || 'N/A', 60, yPosition);
+            yPosition += 10;
+            
+            // Event Type
+            doc.setTextColor(100, 100, 100);
+            doc.text('Event Type:', 20, yPosition);
+            doc.setTextColor(0, 0, 0);
+            doc.text(bookingData.eventType || 'N/A', 60, yPosition);
+            yPosition += 10;
+            
+            // Event Date
+            doc.setTextColor(100, 100, 100);
+            doc.text('Event Date:', 20, yPosition);
+            doc.setTextColor(0, 0, 0);
+            const eventDate = bookingData.eventDate ? new Date(bookingData.eventDate).toLocaleDateString('en-US') : 'N/A';
+            doc.text(eventDate, 60, yPosition);
+            yPosition += 10;
+            
+            // Number of Guests
+            doc.setTextColor(100, 100, 100);
+            doc.text('Number of Guests:', 20, yPosition);
+            doc.setTextColor(0, 0, 0);
+            doc.text(bookingData.guests || 'N/A', 60, yPosition);
+            yPosition += 10;
+            
+            // Event Time
+            if (bookingData.eventTime) {
+                doc.setTextColor(100, 100, 100);
+                doc.text('Event Time:', 20, yPosition);
+                doc.setTextColor(0, 0, 0);
+                doc.text(bookingData.eventTime, 60, yPosition);
+                yPosition += 10;
+            }
+            
+            // Special Requests
+            if (bookingData.requests) {
+                doc.setTextColor(100, 100, 100);
+                doc.text('Special Requests:', 20, yPosition);
+                doc.setTextColor(0, 0, 0);
+                const splitText = doc.splitTextToSize(bookingData.requests, 150);
+                doc.text(splitText, 20, yPosition + 5);
+                yPosition += splitText.length * 5 + 10;
+            }
+            
+            // Payment Method
+            if (bookingData.paymentMethod) {
+                doc.setTextColor(100, 100, 100);
+                doc.text('Payment Method:', 20, yPosition);
+                doc.setTextColor(0, 0, 0);
+                doc.text(bookingData.paymentMethod === 'card' ? 'Credit/Debit Card' : 'Advance Payment', 60, yPosition);
+                yPosition += 10;
+            }
+            
+            // Footer
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Thank you for choosing GrandVenue Hall. We look forward to hosting your event!', 105, 250, { align: 'center' });
+            doc.text('For any queries, contact us at (555) 123-4567 or info@grandvenuehall.com', 105, 260, { align: 'center' });
+            
+            // Save the PDF
+            const pdfBlob = doc.output('blob');
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            
+            // Open PDF in new tab
+            window.open(pdfUrl, '_blank');
+            
+            showToast('PDF generated successfully');
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

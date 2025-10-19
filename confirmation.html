@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation | GrandVenue Hall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/90 backdrop-blur-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-cinzel font-bold gold-gradient">GrandVenue Hall</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="hover:text-yellow-400 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-yellow-400 transition-colors">About</a>
+                <a href="booking.html" class="hover:text-yellow-400 transition-colors">Book Now</a>
+                <a href="login.html" class="hover:text-yellow-400 transition-colors">Admin</a>
+            </div>
+            <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium">Book Now</a>
+        </div>
+    </nav>
+
+    <!-- Confirmation Section -->
+    <section class="min-h-screen flex items-center justify-center pt-16 bg-gradient-to-br from-black via-gray-900 to-black">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto text-center fade-in">
+                <div class="text-yellow-400 text-6xl mb-6">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-cinzel font-bold mb-6">
+                    <span class="gold-gradient">Booking Confirmed!</span>
+                </h1>
+                <p class="text-xl text-gray-300 mb-10">
+                    Thank you for choosing GrandVenue Hall. Your event has been successfully booked.
+                </p>
+            </div>
+            
+            <!-- Confirmation Card -->
+            <div class="max-w-3xl mx-auto mt-12 fade-in" style="transition-delay: 0.2s;">
+                <div class="bg-gray-900/50 rounded-xl p-8 gold-border">
+                    <h2 class="text-2xl font-cinzel font-bold mb-6 text-center gold-gradient">Booking Details</h2>
+                    
+                    <div id="bookingDetails" class="space-y-4">
+                        <!-- Booking details will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="mt-8 pt-6 border-t border-gray-700">
+                        <p class="text-gray-400 text-center">
+                            A confirmation email has been sent to your email address. 
+                            Our event coordinator will contact you within 24 hours to discuss next steps.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8 fade-in" style="transition-delay: 0.4s;">
+                    <button id="printButton" class="gold-button px-6 py-3 rounded-full font-medium">
+                        <i class="fas fa-print mr-2"></i> Print Confirmation
+                    </button>
+                    <a href="index.html" class="bg-gray-800 text-white px-6 py-3 rounded-full font-medium border border-gray-700 hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-home mr-2"></i> Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t gold-border">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <div class="text-center md:text-left">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Address</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-map-marker-alt text-yellow-400 mr-2"></i>
+                        123 Luxury Avenue
+                    </p>
+                    <p class="text-gray-300 mb-2">Prestige District</p>
+                    <p class="text-gray-300">Metropolis, MP 12345</p>
+                </div>
+                
+                <div class="text-center">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Contact</h3>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-phone text-yellow-400 mr-2"></i>
+                        (555) 123-4567
+                    </p>
+                    <p class="text-gray-300 mb-2">
+                        <i class="fas fa-envelope text-yellow-400 mr-2"></i>
+                        info@grandvenuehall.com
+                    </p>
+                    <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium inline-block mt-4">
+                        Book a Tour
+                    </a>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <h3 class="font-cinzel font-bold text-xl mb-4 gold-gradient">Follow Us</h3>
+                    <div class="flex justify-center md:justify-end space-x-4">
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 mt-6 text-sm">
+                        &copy; 2023 GrandVenue Hall. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Load and display booking data
+            displayBookingData();
+            
+            // Print button functionality
+            document.getElementById('printButton').addEventListener('click', function() {
+                window.print();
+            });
+        });
+
+        // Display booking data from localStorage
+        function displayBookingData() {
+            const bookingData = JSON.parse(localStorage.getItem('bookingData'));
+            const bookingDetails = document.getElementById('bookingDetails');
+            
+            if (!bookingData) {
+                // Redirect to booking page if no data found
+                window.location.href = 'booking.html';
+                return;
+            }
+            
+            // Format the date for display
+            const eventDate = new Date(bookingData.eventDate);
+            const formattedDate = eventDate.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Create HTML for booking details
+            bookingDetails.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="flex justify-between py-2 border-b border-gray-700">
+                        <span class="text-gray-400">Booking ID:</span>
+                        <span class="font-medium">${bookingData.bookingId}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-700">
+                        <span class="text-gray-400">Event Type:</span>
+                        <span class="font-medium">${bookingData.eventType}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-700">
+                        <span class="text-gray-400">Full Name:</span>
+                        <span class="font-medium">${bookingData.fullName}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-700">
+                        <span class="text-gray-400">Email:</span>
+                        <span class="font-medium">${bookingData.email}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-700">
+                        <span class="text-gray-400">Phone:</span>
+                        <span class="font-medium">${bookingData.phone}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-700">
+                        <span class="text-gray-400">Event Date:</span>
+                        <span class="font-medium">${formattedDate}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-700">
+                        <span class="text-gray-400">Number of Guests:</span>
+                        <span class="font-medium">${bookingData.guests}</span>
+                    </div>
+                </div>
+                ${bookingData.requests ? `
+                <div class="mt-4">
+                    <div class="text-gray-400 mb-2">Special Requests:</div>
+                    <div class="bg-gray-800 rounded-lg p-4">${bookingData.requests}</div>
+                </div>
+                ` : ''}
+            `;
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

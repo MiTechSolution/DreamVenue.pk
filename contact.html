@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | GrandVenue Hall</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>">
+    <style>
+        html { scroll-behavior: smooth; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gold-button { background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #CFB53B 100%); color: #000; transition: all 0.3s ease; }
+        .gold-button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3); }
+        .gold-border { border: 1px solid #D4AF37; }
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        #toast { position: fixed; top: 20px; right: 20px; background: #D4AF37; color: #000; padding: 12px 24px; border-radius: 4px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease; }
+        #toast.show { transform: translateX(0); }
+        .error { border-color: #f87171 !important; }
+        .error-message { color: #f87171; font-size: 0.875rem; margin-top: 0.25rem; }
+        .map-container { position: relative; overflow: hidden; height: 100%; min-height: 400px; }
+    </style>
+</head>
+<body class="bg-black text-white">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/90 backdrop-blur-sm py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-2xl font-cinzel font-bold gold-gradient">GrandVenue Hall</a>
+            <div class="hidden md:flex space-x-8">
+                <a href="index.html" class="hover:text-yellow-400 transition-colors">Home</a>
+                <a href="about.html" class="hover:text-yellow-400 transition-colors">About</a>
+                <a href="gallery.html" class="hover:text-yellow-400 transition-colors">Gallery</a>
+                <a href="contact.html" class="hover:text-yellow-400 transition-colors">Contact</a>
+                <a href="Register.html" class="hover:text-yellow-400 transition-colors">ٌRegister</a>
+                <a href="booking.html" class="hover:text-yellow-400 transition-colors">Book Now</a>
+            </div>
+            <a href="booking.html" class="gold-button px-6 py-2 rounded-full font-medium">Book Now</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 bg-gradient-to-br from-black via-gray-900 to-black">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-5xl md:text-6xl font-cinzel font-bold mb-6 fade-in">
+                <span class="gold-gradient">Contact Us</span>
+            </h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto fade-in" style="transition-delay: 0.2s;">
+                Get in touch with our team to discuss your event requirements or schedule a tour of our luxurious venue
+            </p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-20 bg-black">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <!-- Contact Form -->
+                <div class="fade-in">
+                    <h2 class="text-3xl font-cinzel font-bold mb-6 gold-gradient">Send Us a Message</h2>
+                    
+                    <form id="contactForm" class="bg-gray-900/50 rounded-xl p-8 gold-border">
+                        <div class="space-y-6">
+                            <!-- Name -->
+                            <div>
+                                <label for="name" class="block text-gray-300 mb-2">Full Name *</label>
+                                <input type="text" id="name" name="name" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your full name">
+                                <div class="error-message" id="nameError"></div>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div>
+                                <label for="email" class="block text-gray-300 mb-2">Email Address *</label>
+                                <input type="email" id="email" name="email" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Enter your email address">
+                                <div class="error-message" id="emailError"></div>
+                            </div>
+                            
+                            <!-- Subject -->
+                            <div>
+                                <label for="subject" class="block text-gray-300 mb-2">Subject *</label>
+                                <select id="subject" name="subject" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                                    <option value="">Select a subject</option>
+                                    <option value="General Inquiry">General Inquiry</option>
+                                    <option value="Venue Tour">Schedule a Venue Tour</option>
+                                    <option value="Event Planning">Event Planning Consultation</option>
+                                    <option value="Pricing">Pricing Information</option>
+                                    <option value="Partnership">Partnership Opportunities</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="error-message" id="subjectError"></div>
+                            </div>
+                            
+                            <!-- Message -->
+                            <div>
+                                <label for="message" class="block text-gray-300 mb-2">Message *</label>
+                                <textarea id="message" name="message" rows="5" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" placeholder="Tell us about your event or inquiry..."></textarea>
+                                <div class="error-message" id="messageError"></div>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <div>
+                                <button type="submit" class="gold-button px-8 py-4 rounded-full text-lg font-medium w-full">
+                                    Send Message <i class="fas fa-paper-plane ml-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Map and Contact Info -->
+                <div class="fade-in" style="transition-delay: 0.2s;">
+                    <h2 class="text-3xl font-cinzel font-bold mb-6 gold-gradient">Find Us</h2>
+                    
+                    <!-- Map -->
+                    <div class="map-container rounded-xl overflow-hidden gold-border mb-8">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3023.9503398796587!2d-73.998024423769!3d40.723216071390615!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c2598c338f691d%3A0x6a6a518299ef474!2sLuxury%20Venue!5e0!3m2!1sen!2sus!4v1698765432105!5m2!1sen!2sus" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0; min-height: 400px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                    
+                    <!-- Contact Details -->
+                    <div class="bg-gray-900/50  rounded-xl p-6 gold-border">
+                        <h3 class="text-xl font-cinzel font-bold mb-4 gold-gradient">Contact Information</h3>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <div class="text-yellow-400 text-xl mr-4 mt-1">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-300">Address</h4>
+                                    <p class="text-gray-400">123 Luxury Avenue<br>Prestige District<br>Metropolis, MP 12345</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-yellow-400 text-xl mr-4 mt-1">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-300">Phone</h4>
+                                    <p class="text-gray-400">(555) 123-4567</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-yellow-400 text-xl mr-4 mt-1">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-300">Email</h4>
+                                    <p class="text-gray-400">info@grandvenuehall.com<br>bookings@grandvenuehall.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-yellow-400 text-xl mr-4 mt-1">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-300">Working Hours</h4>
+                                    <p class="text-gray-400">Monday - Friday: 9:00 AM - 7:00 PM<br>Saturday: 10:00 AM - 5:00 PM<br>Sunday: 12:00 PM - 4:00 PM</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Social Links -->
+                        <div class="mt-6 pt-6 border-t border-gray-700">
+                            <h4 class="font-semibold text-gray-300 mb-3">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                                <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="text-yellow-400 hover:text-yellow-300 text-2xl">
+                                    <i class="fab fa-pinterest"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+   
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <script>
+        // Fade-in animation on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            
+            const fadeInObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            fadeElements.forEach(element => {
+                fadeInObserver.observe(element);
+            });
+            
+            // Contact form validation
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset errors
+                resetErrors();
+                
+                // Get form values
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value.trim();
+                
+                let isValid = true;
+                
+                // Validate name
+                if (!name) {
+                    showError('name', 'Full name is required');
+                    isValid = false;
+                }
+                
+                // Validate email
+                if (!email) {
+                    showError('email', 'Email is required');
+                    isValid = false;
+                } else if (!isValidEmail(email)) {
+                    showError('email', 'Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                // Validate subject
+                if (!subject) {
+                    showError('subject', 'Please select a subject');
+                    isValid = false;
+                }
+                
+                // Validate message
+                if (!message) {
+                    showError('message', 'Message is required');
+                    isValid = false;
+                } else if (message.length < 10) {
+                    showError('message', 'Message must be at least 10 characters');
+                    isValid = false;
+                }
+                
+                // If form is valid, show success message
+                if (isValid) {
+                    showToast('Message sent successfully! We will get back to you soon.');
+                    document.getElementById('contactForm').reset();
+                }
+            });
+        });
+        
+        // Helper functions
+        function resetErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.textContent = '';
+            });
+            
+            const inputElements = document.querySelectorAll('input, select, textarea');
+            inputElements.forEach(element => {
+                element.classList.remove('error');
+            });
+        }
+        
+        function showError(fieldId, message) {
+            document.getElementById(fieldId).classList.add('error');
+            document.getElementById(`${fieldId}Error`).textContent = message;
+        }
+        
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
